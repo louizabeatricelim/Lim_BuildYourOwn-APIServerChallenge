@@ -11,7 +11,7 @@ This project exposes CRUD endpoints for a `games` resource, returns proper HTTP 
 - Request validation on `POST` and `PUT` (required fields)
 - OpenAPI specification in `gamesAPI.yaml`
 
-### Endpoints
+### Endpoints overview
 
 | Method | Path | Description | Success |
 |--------|------|-------------|---------|
@@ -21,11 +21,6 @@ This project exposes CRUD endpoints for a `games` resource, returns proper HTTP 
 | POST | `/games` | Create a game | 201 |
 | PUT | `/games/<id>` | Update a game | 200 |
 | DELETE | `/games/<id>` | Delete a game | 200 |
-
-Error responses:
-
-- **400** — missing/invalid JSON or required field
-- **404** — game not found
 
 ### Game fields
 
@@ -37,6 +32,183 @@ Error responses:
 | `release_year` | yes | integer |
 | `developer` | yes | |
 | `rating` | no | number (e.g. 9.6) |
+
+## API reference (sample request & response)
+
+Base URL (local): `http://127.0.0.1:5000`
+
+### GET `/` — Health check
+
+**Request:** none (no body)
+
+**Response `200`:**
+
+```json
+{
+  "message": "Games API is running"
+}
+```
+
+### GET `/games` — List all games
+
+**Request:** none (no body)
+
+**Response `200`:**
+
+```json
+[
+  {
+    "id": 1,
+    "title": "The Legend of Zelda: Breath of the Wild",
+    "genre": "Action-Adventure",
+    "platform": "Nintendo Switch",
+    "release_year": 2017,
+    "developer": "Nintendo EPD",
+    "rating": 9.7
+  },
+  {
+    "id": 2,
+    "title": "Elden Ring",
+    "genre": "Action RPG",
+    "platform": "PC",
+    "release_year": 2022,
+    "developer": "FromSoftware",
+    "rating": 9.6
+  }
+]
+```
+
+### GET `/games/<id>` — Get one game
+
+**Request:** path param `id` (example: `1`)
+
+**Response `200`:**
+
+```json
+{
+  "id": 1,
+  "title": "The Legend of Zelda: Breath of the Wild",
+  "genre": "Action-Adventure",
+  "platform": "Nintendo Switch",
+  "release_year": 2017,
+  "developer": "Nintendo EPD",
+  "rating": 9.7
+}
+```
+
+**Response `404`:**
+
+```json
+{
+  "error": "Game not found"
+}
+```
+
+### POST `/games` — Create a game
+
+**Request body:**
+
+```json
+{
+  "title": "Baldurs Gate 3",
+  "genre": "RPG",
+  "platform": "PC",
+  "release_year": 2023,
+  "developer": "Larian Studios",
+  "rating": 9.6
+}
+```
+
+**Response `201`:**
+
+```json
+{
+  "id": 16,
+  "title": "Baldurs Gate 3",
+  "genre": "RPG",
+  "platform": "PC",
+  "release_year": 2023,
+  "developer": "Larian Studios",
+  "rating": 9.6
+}
+```
+
+**Request body (missing fields):**
+
+```json
+{
+  "title": "Incomplete Game"
+}
+```
+
+**Response `400`:**
+
+```json
+{
+  "error": "Missing required fields: genre, platform, release_year, developer"
+}
+```
+
+### PUT `/games/<id>` — Update a game
+
+**Request:** path param `id` (example: `1`)
+
+**Request body:**
+
+```json
+{
+  "title": "Zelda BOTW",
+  "genre": "Action-Adventure",
+  "platform": "Nintendo Switch",
+  "release_year": 2017,
+  "developer": "Nintendo EPD",
+  "rating": 9.8
+}
+```
+
+**Response `200`:**
+
+```json
+{
+  "id": 1,
+  "title": "Zelda BOTW",
+  "genre": "Action-Adventure",
+  "platform": "Nintendo Switch",
+  "release_year": 2017,
+  "developer": "Nintendo EPD",
+  "rating": 9.8
+}
+```
+
+**Response `404`:**
+
+```json
+{
+  "error": "Game not found"
+}
+```
+
+**Response `400`:** same shape as POST when required fields are missing.
+
+### DELETE `/games/<id>` — Delete a game
+
+**Request:** path param `id` (example: `15`), no body
+
+**Response `200`:**
+
+```json
+{
+  "message": "Game deleted: id=15, title=Among Us"
+}
+```
+
+**Response `404`:**
+
+```json
+{
+  "error": "Game not found"
+}
+```
 
 ## Project structure
 
@@ -97,55 +269,6 @@ Expected:
 {"message": "Games API is running"}
 ```
 
-## Deploy on Render
-
-SQLite on Render’s free web service is fine for demos, but the filesystem is **ephemeral** — data can reset when the instance restarts. That is acceptable for this school project.
-
-### 1. Prepare the repo for production
-
-Create a `requirements.txt` in the project root with:
-
-```text
-Flask==3.1.3
-gunicorn==26.2.0
-```
-
-Update the bottom of `app.py` so it can bind to Render’s `PORT`. Put `import os` at the top of `app.py` with your other imports:
-
-```python
-import os
-
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port, debug=False)
-```
-
-Commit and push to GitHub (include `app.py`, `seed.py`, `requirements.txt`, `gamesAPI.yaml`; you can omit `games.db` and recreate it on deploy).
-
-### 2. Create a Render Web Service
-
-1. Go to [https://render.com](https://render.com) and sign in.
-2. **New** → **Web Service**.
-3. Connect your GitHub repository.
-4. Configure:
-
-| Setting | Value |
-|---------|--------|
-| Runtime | Python 3 |
-| Build Command | `pip install -r requirements.txt && python seed.py` |
-| Start Command | `gunicorn app:app` |
-
-5. Create the service and wait for the deploy to finish.
-6. Open your service URL, e.g. `https://your-app-name.onrender.com/`.
-
-### 3. Smoke-test the deployed API
-
-```powershell
-curl.exe https://your-app-name.onrender.com/
-curl.exe https://your-app-name.onrender.com/games
-```
-
-Replace `your-app-name` with your real Render subdomain.
 
 ## How to test (local)
 
