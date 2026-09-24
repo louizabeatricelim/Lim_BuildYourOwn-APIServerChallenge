@@ -1,0 +1,171 @@
+openapi: 3.0.3
+info:
+  title: Games API
+  description: REST API for managing video games
+  version: 1.0.0
+servers:
+  - url: http://127.0.0.1:5000
+paths:
+  /games:
+    get:
+      summary: List all games
+      operationId: listGames
+      responses:
+        "200":
+          description: Full list of games
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Game"
+    post:
+      summary: Add a new game
+      operationId: addGame
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GameInput"
+      responses:
+        "201":
+          description: Game added
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Game"
+        "400":
+          description: Missing or invalid fields
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /games/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      summary: Get a game by ID
+      operationId: getGame
+      responses:
+        "200":
+          description: Single game
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Game"
+        "404":
+          description: Game not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    put:
+      summary: Update an existing game
+      operationId: updateGame
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GameInput"
+      responses:
+        "200":
+          description: Game updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Game"
+        "400":
+          description: Missing or invalid fields
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Game not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      summary: Delete a game
+      operationId: deleteGame
+      responses:
+        "200":
+          description: Game deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [message]
+                properties:
+                  message:
+                    type: string
+                    example: "Game deleted: id=1, title=Elden Ring"
+        "404":
+          description: Game not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    Game:
+      type: object
+      required: [id, title, genre, platform, release_year, developer]
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: Elden Ring
+        genre:
+          type: string
+          example: Action RPG
+        platform:
+          type: string
+          example: PC
+        release_year:
+          type: integer
+          example: 2022
+        developer:
+          type: string
+          example: FromSoftware
+        rating:
+          type: number
+          nullable: true
+          example: 9.6
+
+    GameInput:
+      type: object
+      required: [title, genre, platform, release_year, developer]
+      properties:
+        title:
+          type: string
+        genre:
+          type: string
+        platform:
+          type: string
+        release_year:
+          type: integer
+        developer:
+          type: string
+        rating:
+          type: number
+          nullable: true
+
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string
+          example: "Missing required fields: genre, platform, release_year, developer"
