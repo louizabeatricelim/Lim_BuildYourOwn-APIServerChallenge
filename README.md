@@ -103,14 +103,14 @@ SQLite on Render’s free web service is fine for demos, but the filesystem is *
 
 ### 1. Prepare the repo for production
 
-Add **gunicorn** (production WSGI server):
+Create a `requirements.txt` in the project root with:
 
-```powershell
-pip install gunicorn
-pip freeze > requirements.txt
+```text
+Flask==3.1.3
+gunicorn==26.2.0
 ```
 
-Update the bottom of `app.py` so it can bind to Render’s `PORT`:
+Update the bottom of `app.py` so it can bind to Render’s `PORT`. Put `import os` at the top of `app.py` with your other imports:
 
 ```python
 import os
