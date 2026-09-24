@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request
-import sqlite3
+import sqlite3, os
 
 app = Flask(__name__)
 
@@ -141,4 +141,5 @@ def delete_game(id):
     }), 200
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=False)
