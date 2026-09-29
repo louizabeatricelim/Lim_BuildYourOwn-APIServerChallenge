@@ -1,0 +1,634 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap");
+
+/* Colors, fonts, and spacing used everywhere in the app */
+:root {
+  --page: #ffffff;
+  --page-wash: #f7f8fa;
+  --surface: #ffffff;
+  --surface-soft: #f7f8fa;
+  --border: #e5e7eb;
+  --border-strong: #cbd2da;
+  --text: #414a55;
+  --text-strong: #14181f;
+  --text-muted: #6b7280;
+
+  --ink: #14181f;
+  --ink-hover: #343b45;
+  --on-ink: #ffffff;
+  --danger: #c0262d;
+  --danger-bg: #fdf1f1;
+  --focus: #14181f;
+
+  /* Stand-in cover art: two colors plus shape placement per variant */
+  --art-0-a: #0f766e;
+  --art-0-b: #5eead4;
+  --art-1-a: #1d4ed8;
+  --art-1-b: #7dd3fc;
+  --art-2-a: #b91c5c;
+  --art-2-b: #fda4af;
+  --art-3-a: #b45309;
+  --art-3-b: #fcd34d;
+  --art-4-a: #4c1d95;
+  --art-4-b: #c4b5fd;
+  --art-5-a: #166534;
+  --art-5-b: #bbf7d0;
+
+  --shadow-card: 0 1px 2px rgba(20, 24, 31, 0.04);
+  --shadow-lift: 0 16px 32px -16px rgba(20, 24, 31, 0.28);
+
+  --font-display: "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-body: "DM Sans", system-ui, "Segoe UI", sans-serif;
+
+  --step--1: 0.875rem;
+  --step-0: 1rem;
+  --step-1: 1.125rem;
+  --step-2: 1.5rem;
+  --step-3: clamp(2.25rem, 1.6rem + 2.6vw, 3.5rem);
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4.5rem;
+
+  --radius-hero: 20px;
+  --radius-card: 16px;
+  --radius-input: 12px;
+  --radius-pill: 999px;
+
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--page);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+#app {
+  width: 100%;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: var(--space-4) var(--space-5) var(--space-8);
+}
+
+/* Detail, form, and not-found pages read better in a narrow column */
+#app:has(> dl),
+#app:has(> form),
+#app:has(> .error) {
+  max-width: 40rem;
+}
+
+h1 {
+  margin: var(--space-4) 0 var(--space-5);
+  font-family: var(--font-display);
+  font-size: var(--step-3);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  color: var(--text-strong);
+  text-wrap: balance;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: var(--ink);
+  text-underline-offset: 0.2em;
+}
+
+a:hover {
+  color: var(--ink-hover);
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+/* Plain "Back" links, not the filled buttons */
+#app > a[data-link]:not(.btn):not(.brand) {
+  display: inline-block;
+  padding: var(--space-2) 0;
+  font-size: var(--step--1);
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--text-muted);
+}
+
+#app > a[data-link]:not(.btn):not(.brand):hover {
+  color: var(--text-strong);
+  text-decoration: underline;
+}
+
+/* Buttons: Add game, Edit, Save, Create, Search */
+.btn,
+button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 2.875rem;
+  padding: 0 var(--space-5);
+  border: 1px solid var(--ink);
+  border-radius: var(--radius-pill);
+  background: var(--ink);
+  color: var(--on-ink);
+  font: 700 var(--step--1) / 1 var(--font-body);
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease,
+    color 0.15s ease, transform 0.1s ease;
+}
+
+.btn:hover,
+button:hover {
+  background: var(--ink-hover);
+  border-color: var(--ink-hover);
+  color: var(--on-ink);
+}
+
+.btn:active,
+button:active {
+  transform: translateY(1px);
+}
+
+/* Delete stays outlined so it never competes with Edit */
+.btn.danger {
+  background: transparent;
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.btn.danger:hover {
+  background: var(--danger-bg);
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.btn + .btn {
+  margin-left: var(--space-2);
+}
+
+/* Slim top bar that stays visible while scrolling the library */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-7);
+  padding: var(--space-4) 0;
+  background: rgba(255, 255, 255, 0.9);
+  border-bottom: 1px solid var(--border);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+.brand {
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text-strong);
+  text-decoration: none;
+}
+
+.topbar .btn::before {
+  content: "+" / "";
+  font-size: 1.3em;
+  line-height: 0.8;
+}
+
+/* Headline plus search, the first thing on the list page */
+.hero {
+  max-width: 44rem;
+  margin-bottom: var(--space-7);
+}
+
+.hero h1 {
+  margin-top: 0;
+  margin-bottom: var(--space-3);
+}
+
+.hero-sub {
+  margin-bottom: var(--space-5);
+  font-size: var(--step-1);
+  color: var(--text-muted);
+}
+
+.search {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.search input {
+  flex: 1;
+  min-width: 0;
+  min-height: 3.25rem;
+  padding: 0 var(--space-5);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+  color: var(--text-strong);
+  font: 500 var(--step-0) / 1 var(--font-body);
+}
+
+.search input::placeholder {
+  color: var(--text-muted);
+}
+
+.search input:hover {
+  border-color: var(--border-strong);
+}
+
+.search input:focus {
+  outline: none;
+  border-color: var(--ink);
+  box-shadow: 0 0 0 3px rgba(20, 24, 31, 0.12);
+}
+
+.search button {
+  min-height: 3.25rem;
+  padding: 0 var(--space-6);
+}
+
+.results-count {
+  margin-bottom: var(--space-4);
+  font-size: var(--step--1);
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+/* Card grid */
+.game-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15.5rem, 1fr));
+  gap: var(--space-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.game-list a {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  color: var(--text);
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+/*
+  Cover art stand-in until real images exist: a gradient tile with a dot and
+  an arc, positioned differently per variant so cards look distinct.
+*/
+.game-list a::before {
+  content: "";
+  aspect-ratio: 16 / 10;
+  background:
+    radial-gradient(
+      circle at var(--dot-x, 22%) var(--dot-y, 30%),
+      rgba(255, 255, 255, 0.6) 0 13%,
+      transparent 14%
+    ),
+    conic-gradient(
+      from var(--arc, 40deg) at 78% 76%,
+      rgba(255, 255, 255, 0.32) 0 18%,
+      transparent 0 100%
+    ),
+    linear-gradient(140deg, var(--a, var(--art-0-a)), var(--b, var(--art-0-b)));
+}
+
+/* A game keeps the same art on its card and on its detail banner */
+[data-art="0"] {
+  --a: var(--art-0-a);
+  --b: var(--art-0-b);
+  --dot-x: 22%;
+  --dot-y: 30%;
+  --arc: 40deg;
+}
+
+[data-art="1"] {
+  --a: var(--art-1-a);
+  --b: var(--art-1-b);
+  --dot-x: 74%;
+  --dot-y: 26%;
+  --arc: 200deg;
+}
+
+[data-art="2"] {
+  --a: var(--art-2-a);
+  --b: var(--art-2-b);
+  --dot-x: 30%;
+  --dot-y: 68%;
+  --arc: 120deg;
+}
+
+[data-art="3"] {
+  --a: var(--art-3-a);
+  --b: var(--art-3-b);
+  --dot-x: 80%;
+  --dot-y: 62%;
+  --arc: 300deg;
+}
+
+[data-art="4"] {
+  --a: var(--art-4-a);
+  --b: var(--art-4-b);
+  --dot-x: 50%;
+  --dot-y: 38%;
+  --arc: 80deg;
+}
+
+[data-art="5"] {
+  --a: var(--art-5-a);
+  --b: var(--art-5-b);
+  --dot-x: 18%;
+  --dot-y: 58%;
+  --arc: 250deg;
+}
+
+.game-list a:hover {
+  transform: translateY(-4px);
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-lift);
+  color: var(--text);
+}
+
+.game-list strong {
+  padding: var(--space-4) var(--space-4) var(--space-1);
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: var(--text-strong);
+}
+
+.game-list span {
+  padding: 0 var(--space-4) var(--space-4);
+  font-size: var(--step--1);
+  color: var(--text-muted);
+}
+
+/* Shown when the library is empty or a search finds nothing */
+.empty-state {
+  padding: var(--space-7) var(--space-5);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-card);
+  background: var(--page-wash);
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* Detail page: banner title standing in for a wide screenshot */
+#app:has(> dl) > h1 {
+  display: flex;
+  align-items: flex-end;
+  min-height: 12rem;
+  margin: var(--space-3) 0 var(--space-5);
+  padding: var(--space-5);
+  border-radius: var(--radius-hero);
+  color: #fff;
+  background:
+    linear-gradient(to top, rgba(10, 14, 20, 0.62), rgba(10, 14, 20, 0) 62%),
+    radial-gradient(
+      circle at var(--dot-x, 78%) var(--dot-y, 26%),
+      rgba(255, 255, 255, 0.45) 0 9%,
+      transparent 10%
+    ),
+    conic-gradient(
+      from var(--arc, 210deg) at 88% 84%,
+      rgba(255, 255, 255, 0.28) 0 16%,
+      transparent 0 100%
+    ),
+    linear-gradient(140deg, var(--a, var(--art-0-a)), var(--b, var(--art-0-b)));
+}
+
+/* Field list on the detail page */
+dl {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  margin: 0 0 var(--space-6);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+dt,
+dd {
+  margin: 0;
+  padding: var(--space-4) var(--space-5);
+  border-top: 1px solid var(--border);
+}
+
+dt:first-of-type,
+dt:first-of-type + dd {
+  border-top: 0;
+}
+
+dt {
+  padding-right: var(--space-7);
+  font-size: var(--step--1);
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+dd {
+  font-weight: 600;
+  color: var(--text-strong);
+  overflow-wrap: anywhere;
+}
+
+/* Add and edit form */
+#app:has(> form) > h1 {
+  font-size: var(--step-2);
+  margin-top: var(--space-2);
+}
+
+#game-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-5) var(--space-4);
+  padding: var(--space-6);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+}
+
+/* Title, error, and submit take the whole row */
+#game-form label:first-of-type,
+#form-error,
+#game-form button[type="submit"] {
+  grid-column: 1 / -1;
+}
+
+label {
+  display: grid;
+  gap: var(--space-2);
+  align-content: start;
+  font-size: var(--step--1);
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+#game-form input {
+  width: 100%;
+  min-height: 2.875rem;
+  padding: var(--space-2) var(--space-3);
+  background: var(--surface-soft);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-input);
+  color: var(--text-strong);
+  font: 500 var(--step-0) / 1.4 var(--font-body);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease,
+    background-color 0.15s ease;
+}
+
+#game-form input:hover {
+  border-color: var(--border-strong);
+}
+
+#game-form input:focus {
+  outline: none;
+  background: var(--surface);
+  border-color: var(--ink);
+  box-shadow: 0 0 0 3px rgba(20, 24, 31, 0.12);
+}
+
+#game-form button[type="submit"] {
+  justify-self: start;
+  min-width: 10rem;
+}
+
+/* Loading and error feedback */
+.loading {
+  padding: var(--space-8) 0;
+  text-align: center;
+  color: var(--text-muted);
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.4;
+  }
+}
+
+.error {
+  padding: var(--space-3) var(--space-4);
+  background: var(--danger-bg);
+  border-left: 3px solid var(--danger);
+  border-radius: var(--radius-input);
+  color: var(--danger);
+  font-weight: 600;
+}
+
+#app > h1 + .error {
+  margin-bottom: var(--space-4);
+}
+
+/* Narrow screens */
+@media (max-width: 600px) {
+  #app {
+    padding: 0 var(--space-4) var(--space-7);
+  }
+
+  .topbar {
+    padding: var(--space-3) 0;
+  }
+
+  .search {
+    flex-direction: column;
+  }
+
+  .search button {
+    width: 100%;
+  }
+
+  .game-list {
+    grid-template-columns: 1fr;
+  }
+
+  /* Detail: label above value */
+  dl {
+    grid-template-columns: 1fr;
+  }
+
+  dt {
+    padding: var(--space-3) var(--space-4) 0;
+    border-top: 1px solid var(--border);
+  }
+
+  dd {
+    padding: 0 var(--space-4) var(--space-3);
+    border-top: 0;
+  }
+
+  dt:first-of-type {
+    border-top: 0;
+  }
+
+  #app:has(> dl) > h1 {
+    min-height: 10rem;
+    padding: var(--space-4);
+  }
+
+  #game-form {
+    grid-template-columns: 1fr;
+    padding: var(--space-5) var(--space-4);
+  }
+
+  #game-form button[type="submit"] {
+    justify-self: stretch;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
